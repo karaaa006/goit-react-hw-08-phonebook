@@ -1,9 +1,10 @@
-import "./App.scss";
+import "./App.css";
+import { Phonebook } from "./components/Phonebook/Phonebook";
 
 function App() {
   return (
     <div className="App">
-      <h1>It's work!</h1>
+      <Phonebook />
     </div>
   );
 }

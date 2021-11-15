@@ -1,0 +1,39 @@
+.contactList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.contactItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #bbb;
+
+  &:not(:last-child) {
+    margin-bottom: 10px;
+  }
+}
+
+.contactText {
+  margin: 0 10px 0 0;
+}
+
+.delBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+
+  &:hover .icon {
+    color: #ff0000;
+  }
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+}

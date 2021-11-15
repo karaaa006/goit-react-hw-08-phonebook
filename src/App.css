@@ -1,0 +1,18 @@
+.App {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+input {
+  padding: 10px;
+}
+.labelText {
+  margin: 0;
+  font-weight: 600;
+}
+h2 {
+  font-size: 18px;
+}
