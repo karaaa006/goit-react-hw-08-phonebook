@@ -2,10 +2,14 @@ import { useState } from "react";
 import PropTypes from "prop-types";
 
 import s from "./ContactForm.module.scss";
+import { useDispatch } from "react-redux";
+import { addContact } from "../../store/reducers/contacts";
+import shortid from "shortid";
 
 function ContactForm({ onSubmit }) {
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
+  const dispatch = useDispatch();
 
   const handleNameChange = (e) => {
     setName(e.target.value);
@@ -22,7 +26,8 @@ function ContactForm({ onSubmit }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    onSubmit({ name, number });
+    // onSubmit({ name, number });
+    dispatch(addContact({ id: shortid.generate(), name, number }));
 
     clearForm();
   };
