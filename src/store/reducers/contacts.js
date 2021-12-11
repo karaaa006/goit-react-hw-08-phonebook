@@ -23,9 +23,7 @@ const { actions, reducer } = createSlice({
       return [...state, action.payload];
     },
     delContact(state, action) {
-      const newState = state.filter((i) => i.id !== action.payload.id);
-      console.log(newState);
-      return newState;
+      return state.filter((i) => i.id !== action.payload);
     },
   },
 });

@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import { addContact } from "../../store/reducers/contacts";
 import shortid from "shortid";
 
-function ContactForm({ onSubmit }) {
+function ContactForm() {
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
   const dispatch = useDispatch();
