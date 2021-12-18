@@ -1,16 +1,14 @@
 import s from "./ContactList.module.scss";
 import { TiDelete } from "react-icons/ti";
 import { useDispatch, useSelector } from "react-redux";
-import { delContact } from "../../store/reducers/contacts";
 import { useEffect, useState } from "react";
+import { deleteContact } from "../../store/operations/contactOperations";
 
 export function ContactList() {
   const dispatch = useDispatch();
-  const contacts = useSelector((state) => state.contacts);
+  const contacts = useSelector((state) => state.contacts.items);
   const filter = useSelector((state) => state.filter);
-  const [filteredContacts, setFilteredContacts] = useState(
-    getFilteredContacts()
-  );
+  const [filteredContacts, setFilteredContacts] = useState([]);
 
   useEffect(() => {
     setFilteredContacts(getFilteredContacts());
@@ -26,7 +24,7 @@ export function ContactList() {
   }
 
   function handleDeleteContact(id) {
-    dispatch(delContact(id));
+    dispatch(deleteContact(id));
   }
 
   return (

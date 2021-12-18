@@ -1,33 +1,70 @@
 import { createSlice } from "@reduxjs/toolkit";
+import {
+  fetchContacts,
+  deleteContact,
+  addContact,
+} from "../operations/contactOperations";
 
-const initialState = [];
+const initialState = { items: [], isLoading: false, error: null };
 
-const isInclude = (name, state) => {
-  if (state.length > 0) {
-    return state.some(
-      (contact) => contact.name.toLowerCase() === name.toLowerCase()
-    );
-  }
-};
-
-const { actions, reducer } = createSlice({
+const { reducer } = createSlice({
   name: "contactsReducer",
   initialState,
-  reducers: {
-    addContact(state, action) {
-      if (isInclude(action.payload.name, state)) {
-        alert(`${action.payload.name} is already in contacts.`);
-        return;
-      }
-
-      return [...state, action.payload];
+  extraReducers: {
+    [fetchContacts.pending]: (state) => {
+      return { ...state, isLoading: true };
     },
-    delContact(state, action) {
-      return state.filter((i) => i.id !== action.payload);
+    [fetchContacts.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        items: [...state.items, ...action.payload.data],
+        isLoading: false,
+      };
+    },
+    [fetchContacts.rejected]: (state, action) => {
+      return {
+        ...state,
+        error: action.error,
+        isLoading: false,
+      };
+    },
+    [deleteContact.pending]: (state) => {
+      return { ...state, isLoading: true };
+    },
+    [deleteContact.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        items: state.items.filter((i) => i.id !== action.meta.arg),
+        isLoading: false,
+      };
+    },
+    [deleteContact.rejected]: (state, action) => {
+      return {
+        ...state,
+        error: action.error,
+        isLoading: false,
+      };
+    },
+    [addContact.pending]: (state) => {
+      return { ...state, isLoading: true };
+    },
+    [addContact.fulfilled]: (state, action) => {
+      if (action?.payload?.data) {
+        return {
+          ...state,
+          items: [...state.items, action.payload.data],
+          isLoading: false,
+        };
+      }
+    },
+    [addContact.rejected]: (state, action) => {
+      return {
+        ...state,
+        error: action.error,
+        isLoading: false,
+      };
     },
   },
 });
-
-export const { addContact, delContact } = actions;
 
 export default reducer;
