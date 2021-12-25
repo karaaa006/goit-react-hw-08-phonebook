@@ -7,64 +7,48 @@ import {
 
 const initialState = { items: [], isLoading: false, error: null };
 
-const { reducer } = createSlice({
+const { reducer, actions } = createSlice({
   name: "contactsReducer",
   initialState,
+  reducers: {
+    clearContactsState: () => initialState,
+  },
   extraReducers: {
     [fetchContacts.pending]: (state) => {
-      return { ...state, isLoading: true };
+      state.isLoading = true;
     },
     [fetchContacts.fulfilled]: (state, action) => {
-      return {
-        ...state,
-        items: [...state.items, ...action.payload.data],
-        isLoading: false,
-      };
+      state.items = action?.payload?.data;
+      state.isLoading = false;
     },
     [fetchContacts.rejected]: (state, action) => {
-      return {
-        ...state,
-        error: action.error,
-        isLoading: false,
-      };
+      state.error = action.error;
+      state.isLoading = false;
     },
     [deleteContact.pending]: (state) => {
-      return { ...state, isLoading: true };
+      state.isLoading = true;
     },
     [deleteContact.fulfilled]: (state, action) => {
-      return {
-        ...state,
-        items: state.items.filter((i) => i.id !== action.meta.arg),
-        isLoading: false,
-      };
+      state.items = state.items.filter((i) => i.id !== action.payload.data.id);
+      state.isLoading = false;
     },
     [deleteContact.rejected]: (state, action) => {
-      return {
-        ...state,
-        error: action.error,
-        isLoading: false,
-      };
+      state.error = action.error;
+      state.isLoading = false;
     },
     [addContact.pending]: (state) => {
-      return { ...state, isLoading: true };
+      state.isLoading = true;
     },
     [addContact.fulfilled]: (state, action) => {
-      if (action?.payload?.data) {
-        return {
-          ...state,
-          items: [...state.items, action.payload.data],
-          isLoading: false,
-        };
-      }
+      state.items.push(action.payload.data);
+      state.isLoading = false;
     },
     [addContact.rejected]: (state, action) => {
-      return {
-        ...state,
-        error: action.error,
-        isLoading: false,
-      };
+      state.error = action.error;
+      state.isLoading = false;
     },
   },
 });
+export const { clearContactsState } = actions;
 
 export default reducer;

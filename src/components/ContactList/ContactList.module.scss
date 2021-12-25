@@ -19,7 +19,7 @@
   margin: 0 10px 0 0;
 }
 
-.delBtn {
+.btn {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -27,13 +27,29 @@
   background-color: transparent;
   border: none;
   cursor: pointer;
+  opacity: 0;
+  transition: opacity ease 250ms;
+}
 
+.delBtn {
   &:hover .icon {
     color: #ff0000;
+  }
+}
+
+.editBtn {
+  &:hover .icon {
+    color: #ffdd19;
   }
 }
 
 .icon {
   width: 20px;
   height: 20px;
+}
+.listItem {
+  &:hover .btn,
+  &:focus .btn {
+    opacity: 1;
+  }
 }

@@ -1,18 +1,13 @@
-.App {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
+@import "~antd/dist/antd.css";
+.form {
+  text-align: center;
+  max-width: 350px;
+  margin: 0 auto;
 }
-
-input {
-  padding: 10px;
+.form-btn {
+  width: 100%;
 }
-.labelText {
-  margin: 0;
-  font-weight: 600;
-}
-h2 {
-  font-size: 18px;
+.main-content {
+  max-width: 1024px;
+  margin: 0 auto;
 }

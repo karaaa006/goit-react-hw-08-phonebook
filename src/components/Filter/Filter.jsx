@@ -1,3 +1,5 @@
+import { Input } from "antd";
+import Search from "antd/lib/input/Search";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setFilter } from "../../store/reducers/filter";
@@ -13,12 +15,12 @@ export function Filter() {
 
   return (
     <label className={s.Filter}>
-      <p className="labelText">Find contacts by name</p>
-      <input
+      <Input
         type="text"
         className="search"
         value={filterText}
         onChange={(e) => setFilterText(e.target.value)}
+        placeholder="Find contacts by name"
       />
     </label>
   );

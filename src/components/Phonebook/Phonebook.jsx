@@ -11,23 +11,14 @@ export function Phonebook() {
 
   const isLoading = useSelector((state) => state.contacts.isLoading);
 
-  useEffect(() => {
-    dispatch(fetchContacts());
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(fetchContacts());
+  // }, [dispatch]);
   return (
     <section className={s.phonebook}>
-      <h1>{isLoading ? "Loading..." : "Phonebook"}</h1>
-      <div className={s.featuresWrap}>
-        <div className={s.addContact}>
-          <h2>Add new contact</h2>
-          <ContactForm />
-        </div>
-        <div>
-          <h2>Contacts</h2>
-          <Filter />
-          <ContactList />
-        </div>
-      </div>
+      <h1>{isLoading ? "Loading..." : "Contacts"}</h1>
+      <Filter />
+      <ContactList />
     </section>
   );
 }
