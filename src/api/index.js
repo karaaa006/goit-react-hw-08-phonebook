@@ -59,7 +59,7 @@ export const getContacts = async function () {
 
 export const setContact = async function (contact) {
   try {
-    const res = api.post("/contacts", contact);
+    const res = await api.post("/contacts", contact);
 
     return res;
   } catch (err) {
@@ -69,7 +69,17 @@ export const setContact = async function (contact) {
 
 export const delContact = async function (id) {
   try {
-    const res = api.delete(`contacts/${id}`);
+    const res = await api.delete(`contacts/${id}`);
+
+    return res;
+  } catch (err) {
+    return err;
+  }
+};
+
+export const editContact = async function (id, contact) {
+  try {
+    const res = await api.patch(`contacts/${id}`, contact);
 
     return res;
   } catch (err) {

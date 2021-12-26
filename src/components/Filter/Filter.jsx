@@ -1,5 +1,4 @@
 import { Input } from "antd";
-import Search from "antd/lib/input/Search";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setFilter } from "../../store/reducers/filter";

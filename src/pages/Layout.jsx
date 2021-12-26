@@ -4,7 +4,7 @@ import { Outlet, NavLink } from "react-router-dom";
 import { UserMenu } from "../components/UserMenu/UserMenu";
 
 export default function Layout() {
-  const isLogined = useSelector((state) => Boolean(state.user?.token));
+  const isLogined = useSelector((state) => Boolean(state.user.token));
   return (
     <>
       <PageHeader

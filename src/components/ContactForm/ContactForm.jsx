@@ -1,15 +1,28 @@
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 
-import s from "./ContactForm.module.scss";
-import { useDispatch } from "react-redux";
-import { addContact } from "../../store/operations/contactOperations";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addContact,
+  fetchEditContact,
+} from "../../store/operations/contactOperations";
 import { Button, Form, Input } from "antd";
+import { isInclude } from "../../utils";
 
-function ContactForm() {
+function ContactForm({ editingContact }) {
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
+  const contacts = useSelector((state) => state.contacts.items);
+  const [form] = Form.useForm();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    form.setFieldsValue(editingContact);
+    setName(editingContact.name);
+    setNumber(editingContact.number);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editingContact]);
 
   const handleNameChange = (e) => {
     setName(e.target.value);
@@ -18,54 +31,23 @@ function ContactForm() {
     setNumber(e.target.value);
   };
 
-  const clearForm = () => {
-    setNumber("");
-    setName("");
+  const handleSubmit = () => {
+    if (isInclude(name, contacts) && !editingContact.id) {
+      alert(`${name} is already in contacts.`);
+    } else {
+      if (editingContact.id) {
+        dispatch(fetchEditContact({ id: editingContact.id, name, number }));
+      } else {
+        dispatch(addContact({ name, number }));
+      }
+      form.resetFields();
+    }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    dispatch(addContact({ name, number }));
-
-    clearForm();
-  };
-
-  // return (
-  // <form onSubmit={handleSubmit} className={s.form}>
-  //   <label className={s.label}>
-  //     <p className="labelText">Name</p>
-  //     <input
-  //       type="text"
-  //       name="name"
-  //       pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-  //       title="Имя может состоять только из букв, апострофа, тире и пробелов. Например Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan и т. п."
-  //       required
-  //       value={name}
-  //       onChange={handleNameChange}
-  //     />
-  //   </label>
-  //   <label className={s.label}>
-  //     <p className="labelText">Number</p>
-  //     <input
-  //       type="tel"
-  //       name="number"
-  //       pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-  //       title="Номер телефона должен состоять цифр и может содержать пробелы, тире, круглые скобки и может начинаться с +"
-  //       required
-  //       value={number}
-  //       onChange={handleNumberChange}
-  //     />
-  //   </label>
-
-  //   <button type="submit" className={s.btn}>
-  //     Add contact
-  //   </button>
-  // </form>
-  // );
   return (
     <Form
-      name="login"
+      form={form}
+      name="addContact"
       layout="vertical"
       autoComplete="off"
       className="form"
@@ -75,31 +57,26 @@ function ContactForm() {
         label="Name"
         name="name"
         rules={[{ required: true, message: "Please input name!" }]}
-        onChange={handleNameChange}
-        value={name}
       >
-        <Input />
+        <Input value={name} onChange={handleNameChange} />
       </Form.Item>
       <Form.Item
         label="Number"
         name="number"
         rules={[{ required: true, message: "Please input phone number!" }]}
-        pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-        onChange={handleNumberChange}
-        value={number}
       >
-        <Input />
+        <Input onChange={handleNumberChange} value={number} />
       </Form.Item>
-      {/* <Form.Item> */}
-      {/* <Button type="primary" htmlType="submit" className="form-btn">
-          Login
-        </Button> */}
-      {/* </Form.Item> */}
+      <Form.Item>
+        <Button type="primary" htmlType="submit" className="form-btn">
+          {editingContact.id ? "Edit contact" : "Add contact"}
+        </Button>
+      </Form.Item>
     </Form>
   );
 }
 export { ContactForm };
 
 ContactForm.propTypes = {
-  onSubmit: PropTypes.func,
+  editingContact: PropTypes.object,
 };

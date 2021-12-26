@@ -2,9 +2,8 @@ import s from "./ContactList.module.scss";
 import { Avatar, Button, Divider, List } from "antd";
 import { TiDelete, TiEdit } from "react-icons/ti";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
-  addContact,
   deleteContact,
   fetchContacts,
 } from "../../store/operations/contactOperations";
@@ -20,10 +19,16 @@ export function ContactList() {
 
   const [filteredContacts, setFilteredContacts] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [editingContact, setEditingContact] = useState({
+    id: null,
+    name: "",
+    number: "",
+  });
 
   useEffect(() => {
     apiTokenConfig.set(token);
     dispatch(fetchContacts());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -44,21 +49,33 @@ export function ContactList() {
     dispatch(deleteContact(id));
   }
 
-  const handleToggleModal = () => {
-    setModalIsOpen((prev) => !prev);
-  };
+  function handleEditContact(contactInfo) {
+    setEditingContact(contactInfo);
 
-  const handleAddContact = (contact) => {
-    dispatch(
-      addContact({
-        name: "Jacob Mercer",
-        number: "761-23-96",
-      })
-    );
-  };
+    handleToggleModal();
+  }
+
+  function handleAddContact() {
+    setEditingContact({ id: null, name: "", number: "" });
+
+    handleToggleModal();
+  }
+
+  function handleToggleModal() {
+    setModalIsOpen((prev) => !prev);
+  }
 
   return (
     <>
+      <Modal
+        transitionName=""
+        maskTransitionName=""
+        onCancel={handleToggleModal}
+        visible={modalIsOpen}
+        footer={null}
+      >
+        <ContactForm editingContact={editingContact} />
+      </Modal>
       <List
         itemLayout="horizontal"
         dataSource={filteredContacts}
@@ -66,12 +83,12 @@ export function ContactList() {
           <List.Item className={s.listItem}>
             <List.Item.Meta
               avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}
-              title={<a href="https://ant.design">{item.name}</a>}
-              description={item.number}
+              title={item.name}
+              description={<a href={`tel: ${item.number}`}>{item.number}</a>}
             />
             <button
               className={`${s.editBtn} ${s.btn}`}
-              onClick={() => handleDeleteContact(item.id)}
+              onClick={() => handleEditContact(item)}
             >
               <TiEdit className={s.icon} />
             </button>
@@ -85,26 +102,10 @@ export function ContactList() {
         )}
       />
       <Divider orientation="right">
-        <Button size={"small"} onClick={handleToggleModal}>
+        <Button size={"small"} onClick={handleAddContact}>
           Add new contact
         </Button>
       </Divider>
-      <Modal
-        onCancel={handleToggleModal}
-        visible={modalIsOpen}
-        footer={[
-          <Button
-            key="submit"
-            type="primary"
-            // loading={loading}
-            onClick={handleAddContact}
-          >
-            Add contact
-          </Button>,
-        ]}
-      >
-        <ContactForm />
-      </Modal>
     </>
   );
 }

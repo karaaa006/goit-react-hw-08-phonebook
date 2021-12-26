@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { getContacts, setContact, delContact } from "../../api";
+import { getContacts, setContact, delContact, editContact } from "../../api";
 import { isInclude } from "../../utils";
 
 export const fetchContacts = createAsyncThunk(
@@ -13,6 +13,7 @@ export const fetchContacts = createAsyncThunk(
     }
   }
 );
+
 export const deleteContact = createAsyncThunk(
   "contacts/deleteContacts",
   async (id, { rejectWithValue }) => {
@@ -24,16 +25,27 @@ export const deleteContact = createAsyncThunk(
     }
   }
 );
+
 export const addContact = createAsyncThunk(
   "contacts/addContact",
-  async (contact, { rejectWithValue, getState }) => {
+  async (contact, { rejectWithValue }) => {
     try {
-      if (isInclude(contact.name, getState().contacts.items)) {
-        alert(`${contact.name} is already in contacts.`);
-      } else {
-        const data = await setContact(contact);
-        return data;
-      }
+      const data = await setContact(contact);
+
+      return data;
+    } catch (err) {
+      return rejectWithValue(err);
+    }
+  }
+);
+
+export const fetchEditContact = createAsyncThunk(
+  "contacts/fetchEditContact",
+  async (contact, { rejectWithValue }) => {
+    try {
+      const { id, name, number } = contact;
+      const data = await editContact(id, { name, number });
+      return data;
     } catch (err) {
       return rejectWithValue(err);
     }

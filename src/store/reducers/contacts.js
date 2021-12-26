@@ -3,6 +3,7 @@ import {
   fetchContacts,
   deleteContact,
   addContact,
+  fetchEditContact,
 } from "../operations/contactOperations";
 
 const initialState = { items: [], isLoading: false, error: null };
@@ -29,7 +30,7 @@ const { reducer, actions } = createSlice({
       state.isLoading = true;
     },
     [deleteContact.fulfilled]: (state, action) => {
-      state.items = state.items.filter((i) => i.id !== action.payload.data.id);
+      state.items = state.items.filter((i) => i.id !== action.meta.arg);
       state.isLoading = false;
     },
     [deleteContact.rejected]: (state, action) => {
@@ -44,6 +45,21 @@ const { reducer, actions } = createSlice({
       state.isLoading = false;
     },
     [addContact.rejected]: (state, action) => {
+      state.error = action.error;
+      state.isLoading = false;
+    },
+    [fetchEditContact.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [fetchEditContact.fulfilled]: (state, action) => {
+      const { data } = action.payload;
+
+      const idx = state.items.findIndex((item) => item.id === data.id);
+      state.items[idx] = data;
+
+      state.isLoading = false;
+    },
+    [fetchEditContact.rejected]: (state, action) => {
       state.error = action.error;
       state.isLoading = false;
     },
